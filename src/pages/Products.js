@@ -23,8 +23,6 @@ export default function Products(){
 		.then(result=>result.json())
 		.then(result =>{
 
-			console.log('user fetch')
-
 			setProducts(result);
 
 		})
@@ -44,8 +42,6 @@ export default function Products(){
 		.then(result=>result.json())
 		.then(result =>{
 
-
-			console.log("admin fetch")
 
 			setProducts(result);
 

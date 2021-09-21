@@ -5,9 +5,7 @@ import Product from './Product';
 
 export default function UserView({productData}){
 
-	console.log('User View');
-
-
+	
 	const [products, setProducts] = useState([])
 
 	useEffect(()=>{
@@ -30,12 +28,11 @@ export default function UserView({productData}){
 
 	return (
 
-		<CardDeck>
+		<>
 
 		{products}
 
-		</CardDeck>
-
+		</>
 
 		)
 }

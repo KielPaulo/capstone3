@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import {Navbar, Nav, NavDropdown} from 'react-bootstrap';
 
 import UserContext from './../UserContext'
-import {useHistory, NavLink} from 'react-router-dom'
+import {useHistory, NavLink, Link} from 'react-router-dom'
 import cartIco from "./../images/icons8-shopping-cart-64_2.png";
 
 
@@ -11,22 +11,32 @@ export default function Header(){
 	const {userInfo, unsetUserInfo} = useContext(UserContext);
 	const {rootUrl} = useContext(UserContext);
 	const {addCartToggle} = useContext(UserContext);
+	const {removeCartToggle, setRemoveCartToggle} = useContext(UserContext);
+	const {cartItemArr, setCartItemArr} = useContext(UserContext);
+	const {cartItemCount} = useContext(UserContext);
+	const {getCartItems} = useContext(UserContext);
 	const token =  localStorage.getItem('token');
-	const [cartItemCount, setCartItemCount] = useState(0);
 
 
 	let history = useHistory();
 
 
 	const logout =()=>{
-		  setCartItemCount(0);
+		 /* setCartItemCount(0);*/
 		  unsetUserInfo();
 
 		  history.push('/login')
 	}
 
-	
-useEffect(()=>{
+
+	useEffect(()=>{
+
+
+		getCartItems();
+
+
+	},[])
+/*useEffect(()=>{
 
 	fetch(`${rootUrl}/api/users/getCartItems`,{
 
@@ -38,9 +48,7 @@ useEffect(()=>{
 	})
 	.then(result=>result.json())
 	.then(result=>{
-
-		//console.log(result);
-
+	
 		let itemCount=0
 
 		result.forEach(e=>{
@@ -50,6 +58,7 @@ useEffect(()=>{
 		})
 
 		setCartItemCount(itemCount);
+		setCartItemArr(result);
 
 		
 	}).catch(err=>{
@@ -58,7 +67,7 @@ useEffect(()=>{
 	})
 
 
-}, [userInfo,addCartToggle])
+}, [userInfo,addCartToggle, removeCartToggle])*/
 
 
 	let userNav = (userInfo.userId == null) ? 
@@ -92,7 +101,7 @@ useEffect(()=>{
 		    </Nav>
 		    <span inline>
 		  		<span>{userInfo.firstName} {userInfo.lastName} </span>
-		  		<span className="parentCart"><span id="cartItemCount">{cartItemCount}</span><img src={cartIco} id="cartIcon"/></span>
+		  		<span className="parentCart"><Link as = {Link} to="/cart"><span id="cartItemCount">{cartItemCount}</span><img src={cartIco} id="cartIcon"/></Link></span>
 		    </span>
 		  </Navbar.Collapse>
 		</Navbar>

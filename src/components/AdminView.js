@@ -14,24 +14,88 @@ export default function AdminView(productProp){
 
 	const [showEdit, setShowEdit] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
-	/*const openAdd = ()=> setShowAdd(true);*/
-	const closeAdd = ()=> setShowAdd(false);
+
+
 
 	const [products, setProducts] = useState([]);
 	const [productId, setProductId] = useState('');
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState(0);
+	const [image, setImage] = useState('');
 
 
 
-	const addProduct = (e)=>{
+	const [selectedFile, setSelectedFile] = useState('');
+	const [isFilePicked, setIsFilePicked] = useState(false);
+
+
+	// const changeHandler = (event) => {
+
+	// 	setSelectedFile(event.target.files[0]);
+
+	// 	/*setIsFilePicked(true);*/
+
+	// };
+
+	
+
+
+	const handleSubmission = (image) => {
+		const formData = new FormData();
+
+		formData.append('File', selectedFile);
+
+		fetch(
+			`${rootUrl}/api/products/upload/${image}`,
+			{
+				method: 'POST',
+				body: formData
+			}
+		)
+			.then((response) => response.json())
+			.then((result) => {
+				console.log('Success:', result);
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+
+
+
+			/*console.log(selectedFile.name);*/
+	};
+
+
+	const openAdd = ()=> {
 
 		setShowAdd(true);
 
+
+
+	}
+
+	const closeAdd = ()=> {
+		
+		setShowAdd(false)
+		setSelectedFile('')
+		setProductId('');
+		setName('');
+		setDescription('');
+		setPrice('');
+		setImage('');
+
+	};
+	
+
+	const addProduct = (e)=>{
+
 		e.preventDefault();
 
-		fetch(`${rootUrl}/api/products/create`,{
+		let randomizer = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+
+		 fetch(`${rootUrl}/api/products/create`,{
 
 			method: "POST",
 			headers:{
@@ -43,16 +107,18 @@ export default function AdminView(productProp){
 
 				name: name,
 				description: description,
-				price: price
+				price: price,
+				image: randomizer+'.'+selectedFile.type.slice(6)
 			})
 		})
 
 		.then(result=>result.json())
 		.then(result=>{
 
-			if(result.isCreated=== true){
+			if(result){
 
 				alert('Succesfully added');
+				handleSubmission(result.image);
 				fetchProductsAdmin();
 				closeAdd();
 
@@ -90,6 +156,7 @@ export default function AdminView(productProp){
 			setName(result.name);
 			setDescription(result.description);
 			setPrice(result.price);
+			setImage(result.image);
 
 		})
 
@@ -232,13 +299,21 @@ export default function AdminView(productProp){
 
 		const productArr = productData.map(product=>{
 
+			let imgUrl="";
+
+			if(product.image !==""){
+
+				imgUrl=`${rootUrl}/static/images/${product.image}`
+
+			}
+
 			return (
 
 			
 
-			<Card key={product._id} className="m-3">
+			<Card key={product._id} className="m-3 w-25">
 			
-			  <Card.Img variant="top" src="holder.js/100px160" />
+			  <Card.Img variant="top" src={imgUrl}/>
 			  <Card.Body>
 			    <Card.Title>{product.name}</Card.Title>
 			    <Card.Text>
@@ -282,7 +357,7 @@ export default function AdminView(productProp){
 	return (
 
 		<>
-		<Button className="btn btn-md btn-info m-3" onClick={addProduct}>Add Product</Button>
+		<Button className="btn btn-md btn-info m-3" onClick={openAdd}>Add Product</Button>
 		{products}
 
 		<Modal show={showAdd} onHide={closeAdd}>
@@ -305,6 +380,13 @@ export default function AdminView(productProp){
 						/>
 
 					</Form.Group>
+
+					   <Form.Group>
+					   <Form.Label>Image </Form.Label><br/>
+						<input type="file" name="file" accept="image/*" onChange={(e)=>setSelectedFile(e.target.files[0])} />	
+						{/*<button onClick={handleSubmission}>Submit</button>*/}
+						</Form.Group>
+
 					<Form.Group productDescription="productDescription">
 						<Form.Label>Description</Form.Label>
 						<Form.Control
@@ -347,6 +429,14 @@ export default function AdminView(productProp){
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
+			
+			<img src="C:\Users\layug\Pictures\2019\2019-06-25\IMG_0380.jpg" className="w-25" alt=""/>
+			{/*<img src={`http://localhost:4000/static/images/${image}`} className="w-25" alt=""/>*/}
+			   <Form.Group>
+			   <Form.Label>Change Image</Form.Label><br/>
+				<input type="file" name="file" onChange={(e)=>setSelectedFile(e.target.files[0])} />	
+				{/*<button onClick={handleSubmission}>Submit</button>*/}
+				</Form.Group>
 				<Form.Group controlId ="productName">
 					<Form.Label>Name</Form.Label>
 					<Form.Control
