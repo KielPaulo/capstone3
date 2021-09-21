@@ -24,3 +24,16 @@
 	font-size: 0.8em;
 	border: solid 1px lightgray;
 }
+
+/*.heroCarousel{
+
+	height: 450px;
+	width: 70vw;
+
+}*/
+
+.heroCarousel img{
+
+	max-height: 450px;
+
+}
