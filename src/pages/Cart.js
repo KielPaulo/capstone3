@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import UserContext from './../UserContext';
 import {Card, Button,Container, Alert} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 
 
@@ -100,9 +101,79 @@ export default function Cart(){
 	function checkout(){
 
 
-		console.log(cartItemArr);
+		//console.log(cartItemArr);
+
+		const cartItemArrCK = cartItemArr.map(i =>{
 
 
+			return {productId:i._id._id, quantity:i.quantity}
+		
+
+		})
+
+		console.log(cartItemArrCK);
+
+
+		fetch(`${rootUrl}/api/users/checkout`,{
+
+			method: "POST",
+			headers: {
+
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`
+			},
+			body:JSON.stringify({
+
+			items: cartItemArrCK,
+			totalAmt: cartTotalAmount
+
+			})
+
+		})
+		.then(result=> result.json())
+		.then(result =>{
+
+			if(Object.keys(result).length === 0){
+
+				alert('Something went wrong');
+
+			}else{
+
+				Swal.fire(
+				  'Orders placed successfully',
+				  'Check your orders at "My Orders"',
+				  'success'
+				)
+
+				fetch(`${rootUrl}/api/users/clearCart`,{
+
+					method: "PUT",
+					headers:{
+
+						"Authorization":`Bearer ${token}`
+					}
+				}).then(result => result.json())
+				.then(result=>{
+
+					if(result.cartCleared !== true){
+
+						alert('Cannot clear cart. Something went wrong');
+
+					}
+
+
+					setTimeout(function(){ 
+
+						getCartItems();
+
+					}, 1500);
+
+					
+				})
+
+			}
+
+		})
 
 	}
 
