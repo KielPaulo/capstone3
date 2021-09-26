@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Card, CardDeck} from 'react-bootstrap';
+import {Card, CardDeck, Spinner} from 'react-bootstrap';
 import Product from './Product';
 
 
@@ -24,13 +24,16 @@ export default function UserView({productData}){
 	},[productData])
 
 
+	console.log(products);
+
+
 
 
 	return (
 
 		<>
-
-		{products}
+		{/*products lang dati*/}
+		{(products.length === 0)? <Spinner animation="border" />: products}
 
 		</>
 

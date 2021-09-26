@@ -36,40 +36,40 @@ export default function Header(){
 
 
 	},[userInfo])
-/*useEffect(()=>{
 
-	fetch(`${rootUrl}/api/users/getCartItems`,{
 
-		method: "GET",
-		headers:{
+	let userNav;
 
-			"Authorization": `Bearer ${token}`
-		}
-	})
-	.then(result=>result.json())
-	.then(result=>{
+	if(userInfo.userId == null){
+
+	userNav =
+		<><NavDropdown.Item href="/login">Login</NavDropdown.Item>
+		<NavDropdown.Item as = {NavLink} to="/register">Register</NavDropdown.Item></>
+
+	}else{
+
+
+	userNav =
+	<>
+	<NavDropdown.Item href="#" onClick ={logout}>Logout</NavDropdown.Item>
+	{(userInfo.isAdmin == true) 
+	?
+	<>
+	<NavDropdown.Divider />
+	<NavDropdown.Item as = {NavLink} to="/myOrders">Users List</NavDropdown.Item>
+	<NavDropdown.Item as = {NavLink} to="/myOrders">User Orders</NavDropdown.Item>
+	</>
+
+	:
+	<NavDropdown.Item as = {NavLink} to="/myOrders">My Orders</NavDropdown.Item>
+
+	}
 	
-		let itemCount=0
-
-		result.forEach(e=>{
-
-			itemCount += e.quantity;
-
-		})
-
-		setCartItemCount(itemCount);
-		setCartItemArr(result);
-
-		
-	}).catch(err=>{
-
-		
-	})
+	</>
+	}
 
 
-}, [userInfo,addCartToggle, removeCartToggle])*/
-
-
+/*
 	let userNav = (userInfo.userId == null) ? 
 	<>
 	<NavDropdown.Item href="/login">Login</NavDropdown.Item>
@@ -78,10 +78,11 @@ export default function Header(){
 
 	:
 	<>
+
 	<NavDropdown.Item href="#" onClick ={logout}>Logout</NavDropdown.Item>
 	<NavDropdown.Item as = {NavLink} to="/myOrders">My Orders</NavDropdown.Item>
-{/*	<NavDropdown.Item href="#action/3.2">{userInfo.firstName}</NavDropdown.Item>*/}
-	</>
+
+	</>*/
 
 
 
@@ -101,7 +102,8 @@ export default function Header(){
 		    </Nav>
 		    <span inline>
 		  		<span>{userInfo.firstName} {userInfo.lastName} </span>
-		  		<span className="parentCart"><Link as = {Link} to="/cart"><span id="cartItemCount">{cartItemCount}</span><img src={cartIco} id="cartIcon"/></Link></span>
+		  		{(userInfo.isAdmin == true) ? null : <span className="parentCart"><Link as = {Link} to="/cart"><span id="cartItemCount">{cartItemCount}</span><img src={cartIco} id="cartIcon"/></Link></span> }
+		  		
 		    </span>
 		  </Navbar.Collapse>
 		</Navbar>

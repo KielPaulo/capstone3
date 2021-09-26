@@ -16,7 +16,7 @@ export default function Cart(){
 	const {rootUrl} = useContext(UserContext);
 	const {getCartItems} = useContext(UserContext);
 	const token = localStorage.getItem('token');
-
+	const [qtyValue, setQtyValue] = useState(1);
 
 
 
@@ -95,14 +95,66 @@ export default function Cart(){
 			  </Card.Body>
 			  <Card.Footer>
 
-			
+
+				  <span className="quantityCtrl">
+				  <span>Change Qty:</span>
+				  <button  onClick={()=>changeQty(cartItem._id._id,"dec")}>-</button>
+				  <input type="text" value={cartItem.quantity}/>
+				  <button onClick={()=>changeQty(cartItem._id._id, "inc")}>+</button>
+				  </span>
+				  <br/> <br/>
+
 				  <Button className="btn btn-sm" onClick={()=>removeFromCart(cartItem._id._id)}> Remove from Cart</Button>
+				  
+
+
 				     
 			  </Card.Footer>
 			</Card>
 
 			)
 	})
+
+
+	function changeQty(pId, operation){
+
+		fetch(`${rootUrl}/api/users/changeQtyCart`,{
+
+			method: "PUT",
+			headers:{
+
+				"Content-Type" :" application/json",
+				"Authorization": `Bearer ${token}`
+			},
+			body:JSON.stringify({
+
+				pId: pId,
+				operation: operation
+			})
+
+
+		})
+		.then(result=> result.json())
+		.then(result=>{
+
+			if(result.modifiedCount === 1){
+
+				getCartItems();
+
+			}else{
+
+				alert('Something went wrong');
+				console.log(result);
+			}
+
+
+
+		})
+
+
+		
+
+	}
 
 
 	function checkout(){
@@ -118,9 +170,7 @@ export default function Cart(){
 
 		})
 
-		console.log(cartItemArrCK);
-
-
+		
 		fetch(`${rootUrl}/api/users/checkout`,{
 
 			method: "POST",
@@ -184,16 +234,17 @@ export default function Cart(){
 
 	}
 
-	
+
 
 	return(
 
 
 		<Container>
 		<h2>My Cart</h2>
-		{k}
+		{(k.length === 0) ? <h6>No items in cart</h6> : k}
 		<div>Total Amount: ₱{cartTotalAmount.toLocaleString('en-US')}</div>
-		<Button className="btn btn-warning" onClick={checkout}>Checkout</Button>
+		{ (cartItemArr.length === 0) ? null: <Button className="btn btn-warning" onClick={checkout}>Checkout</Button>}
+		
 		</Container>
 
 

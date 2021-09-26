@@ -94,6 +94,17 @@ const getCartItems = ()=>{
 
 const addToCart = (pId, qtyValue)=>{
 
+  if(token == undefined || token == null){
+
+
+    alertify.set('notifier','position', 'top-center');
+    alertify.set('notifier','delay', 2)
+    alertify.error('You must login first');
+
+    return;
+
+  }
+
   if(qtyValue == undefined){
 
     qtyValue = 1;
@@ -138,11 +149,6 @@ const addToCart = (pId, qtyValue)=>{
 }
 
  
-
-
-
-
-
   useEffect(()=>{
 
     fetch(`${rootUrl}/api/users/details`,{

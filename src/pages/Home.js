@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import Hero from './../components/Hero';
-import {Form, Button, Container, Card, Row, Col, CardDeck} from 'react-bootstrap';
+import {Form, Button, Container, Card, Row, Col, CardDeck, Spinner} from 'react-bootstrap';
 import UserContext from './../UserContext';
 import {Link} from 'react-router-dom'
 
@@ -10,7 +10,7 @@ export default function Home(){
 
 	const {rootUrl} = useContext(UserContext);
 	const {addToCart} = useContext(UserContext);
-	const [featuredArr, setFeaturedArr] = useState([]);
+	const [featuredArr, setFeaturedArr] = useState(<Spinner animation="border"/>);//[] prev value
 
 
 useEffect(()=>{
@@ -81,6 +81,7 @@ return(
 	<div>
 
 	<CardDeck >
+	
 
 	{featuredArr}
 
