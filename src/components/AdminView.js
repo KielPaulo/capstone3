@@ -2,6 +2,9 @@ import React,{useContext, useState, useEffect} from 'react';
 import {Card, Button, Alert, Modal, Form} from 'react-bootstrap';
 import {Link} from 'react-router-dom'
 import UserContext from './../UserContext'
+import Swal from 'sweetalert2'
+import alertify from 'alertifyjs';
+import 'alertifyjs/build/css/alertify.css';
 
 
 
@@ -23,22 +26,13 @@ export default function AdminView(productProp){
 	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState(0);
 	const [image, setImage] = useState('');
+	const [isFeatured, setIsFeatured] = useState(false);
+
 
 
 
 	const [selectedFile, setSelectedFile] = useState('');
 	const [isFilePicked, setIsFilePicked] = useState(false);
-
-
-	// const changeHandler = (event) => {
-
-	// 	setSelectedFile(event.target.files[0]);
-
-	// 	/*setIsFilePicked(true);*/
-
-	// };
-
-	
 
 
 	const handleSubmission = (image) => {
@@ -62,16 +56,12 @@ export default function AdminView(productProp){
 			});
 
 
-
-			/*console.log(selectedFile.name);*/
 	};
 
 
 	const openAdd = ()=> {
 
 		setShowAdd(true);
-
-
 
 	}
 
@@ -84,8 +74,16 @@ export default function AdminView(productProp){
 		setDescription('');
 		setPrice('');
 		setImage('');
+		setIsFeatured(false);
 
 	};
+
+	const handleOnClickFeature = ()=>{
+
+		setIsFeatured(!isFeatured);
+
+	}
+
 	
 
 	const addProduct = (e)=>{
@@ -108,7 +106,8 @@ export default function AdminView(productProp){
 				name: name,
 				description: description,
 				price: price,
-				image: randomizer+'.'+selectedFile.type.slice(6)
+				image: randomizer+'.'+selectedFile.type.slice(6),
+				isFeatured: isFeatured
 			})
 		})
 
@@ -117,7 +116,11 @@ export default function AdminView(productProp){
 
 			if(result){
 
-				alert('Succesfully added');
+				Swal.fire(
+				  'Product successfully added!',
+				  '',
+				  'success'
+				)
 				handleSubmission(result.image);
 				fetchProductsAdmin();
 				closeAdd();
@@ -190,7 +193,10 @@ export default function AdminView(productProp){
 
 			if(result.updateSuccess){
 
-				alert('Update success');
+				alertify.set('notifier','position', 'top-center');
+				alertify.set('notifier','delay', 3)
+				alertify.success('Update successful');
+
 				closeEdit();
 			}
 
@@ -227,7 +233,16 @@ export default function AdminView(productProp){
 
 			if(result.archived === true){
 
-				alert('Archived successfully')
+			/*	Swal.fire(
+				  'Product successfully archived!',
+				  '',
+				  'success'
+				)*/
+
+				alertify.set('notifier','position', 'top-center');
+				 alertify.set('notifier','delay', 2)
+				alertify.success('Archived successfully');
+
 				fetchProductsAdmin();
 			}
 
@@ -252,7 +267,11 @@ export default function AdminView(productProp){
 
 			if(result.unarchived === true){
 
-				alert('Unarchived successfully')
+				alertify.set('notifier','position', 'top-center');
+				alertify.set('notifier','delay', 2)
+				alertify.success('Unarchived successfully');
+
+
 				fetchProductsAdmin();
 			}
 
@@ -281,7 +300,10 @@ export default function AdminView(productProp){
 
 				if(result.deleted === true){
 
-					alert('Succesfully deleted');
+				alertify.set('notifier','position', 'top-center');
+				alertify.set('notifier','delay', 2)
+				alertify.success('Product deleted');
+
 					fetchProductsAdmin();
 
 				}
@@ -354,6 +376,7 @@ export default function AdminView(productProp){
 	}, [productProp])
 
 
+
 	return (
 
 		<>
@@ -408,6 +431,9 @@ export default function AdminView(productProp){
 
 						/>
 					</Form.Group>
+
+					<input type="checkbox" id="feature" onChange={()=>handleOnClickFeature()} value={isFeatured}/>
+					<label for="feature"> Feature on home page</label>
 				</Modal.Body>
 				<Modal.Footer>
 

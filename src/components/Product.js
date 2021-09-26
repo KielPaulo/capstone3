@@ -4,55 +4,17 @@ import {Link} from 'react-router-dom'
 import UserContext from './../UserContext'
 
 
+
 export default function Product({productProp}){
 
 
 	const{_id, name, description, price, image} = productProp;
 	const token = localStorage.getItem('token');
 	const {rootUrl} = useContext(UserContext);
+	const {addToCart} = useContext(UserContext);
 	const {getCartItems} = useContext(UserContext);
-	const {addCartToggle,setAddCartToggle} = useContext(UserContext);
-	const [showAlert, setshowAlert] = useState(false);
 
-
-	const addToCart = (pId)=>{
-
-
-		fetch(`${rootUrl}/api/users/addToCart/${pId}`,{
-
-
-			method: "PUT",
-			headers:{
-
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
-			}
-		})
-
-		.then(result => result.json())
-		.then(result=>{
-
-			
-			if(result){
-
-				setshowAlert(true);
-		
-				getCartItems();
-
-		/*	setAddCartToggle(prevState=> !prevState);*/
-
-			setTimeout(function(){ setshowAlert(false); }, 1250);
-
-			}else{
-
-				console.log('Something went wrong');
-
-			}
-
-		})
-
-	}
-
+	const [qtyValue, setQtyValue] = useState(1);
 
 	let imgUrl="";
 
@@ -64,25 +26,33 @@ export default function Product({productProp}){
 
 	return (
 
-	<Card key={_id} className="m-3 w-25">
-	<Alert key={_id} variant="success" show={showAlert}>Added to Cart</Alert>
+	<Card key={_id} className="m-3 w-25 d-inline-flex h-25">
+	
 	  <Card.Img variant="top" src={imgUrl}/>
 	  <Card.Body>
-	    <Card.Title>{name}</Card.Title>
+	    <Card.Title> <Link to={`/productView/${_id}`}>{name}</Link></Card.Title>
 	    <Card.Text>
 	      {description}
 	    </Card.Text>
 	    <Card.Text>
-	      Php {price}
+	      ₱{price.toLocaleString('en-US')}
 	    </Card.Text>
 	  </Card.Body>
 	  <Card.Footer>
+	  		<div className="quantityCtrl">
+	  		<button  onClick={()=>{(qtyValue > 1)? setQtyValue(qtyValue-1): setQtyValue(qtyValue)}}>-</button>
+	  		<input type="text" value={qtyValue}/>
+	  		<button onClick={()=>{setQtyValue(qtyValue+1)}}>+</button>
+	  		</div>
 
-	  <Link to="/"> View</Link>
-		  <Button className="btn btn-sm" onClick={()=>addToCart(_id)}> Add to Cart</Button>
+		  <Button className="btn btn-sm" onClick={()=>addToCart(_id, qtyValue)}> Add to Cart</Button>
+
 		 
 	    
 	  </Card.Footer>
+
+
+
 	</Card>
 	)
 

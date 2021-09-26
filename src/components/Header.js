@@ -22,7 +22,7 @@ export default function Header(){
 
 
 	const logout =()=>{
-		 /* setCartItemCount(0);*/
+
 		  unsetUserInfo();
 
 		  history.push('/login')
@@ -35,7 +35,7 @@ export default function Header(){
 		getCartItems();
 
 
-	},[])
+	},[userInfo])
 /*useEffect(()=>{
 
 	fetch(`${rootUrl}/api/users/getCartItems`,{
@@ -79,21 +79,21 @@ export default function Header(){
 	:
 	<>
 	<NavDropdown.Item href="#" onClick ={logout}>Logout</NavDropdown.Item>
-	<NavDropdown.Item href="#action/3.2">Profile</NavDropdown.Item>
-	<NavDropdown.Item href="#action/3.2">{userInfo.firstName}</NavDropdown.Item>
+	<NavDropdown.Item as = {NavLink} to="/myOrders">My Orders</NavDropdown.Item>
+{/*	<NavDropdown.Item href="#action/3.2">{userInfo.firstName}</NavDropdown.Item>*/}
 	</>
 
 
 
 	return (
 
-		<Navbar bg="light" expand="lg">
-		  <Navbar.Brand as = {NavLink} to="/">SHINAMONO</Navbar.Brand>
+		<Navbar  fixed="top" bg="light" expand="lg">
+		  <Navbar.Brand as = {NavLink} to="/">KAIMONO</Navbar.Brand>
 		  <Navbar.Toggle aria-controls="basic-navbar-nav" />
 		  <Navbar.Collapse id="basic-navbar-nav">
 		    <Nav className="mr-auto">
 		      <Nav.Link as = {NavLink} to="/">Home</Nav.Link>
-		      <Nav.Link as = {NavLink} to="/products">Products</Nav.Link>
+		      <Nav.Link as = {NavLink} to="/products">All Products</Nav.Link>
 		      <NavDropdown title="Account" id="basic-nav-dropdown">
 		      {userNav}
 		        

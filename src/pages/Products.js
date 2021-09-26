@@ -6,6 +6,7 @@ import AdminView from './../components/AdminView';
 
 
 
+
 export default function Products(){
 
 
@@ -60,11 +61,11 @@ export default function Products(){
 	
 		
 
-		<Container>
+		<div className="text-center">
 
 		{(isAdmin === "true")? <AdminView productData={products} fetchProductsAdmin={fetchProductsAdmin}/>: <UserView productData={products}/>}
 
-		</Container>
+		</div>
 
 
 

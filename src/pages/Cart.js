@@ -3,6 +3,9 @@ import UserContext from './../UserContext';
 import {Card, Button,Container, Alert} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import Swal from 'sweetalert2'
+import alertify from 'alertifyjs';
+import 'alertifyjs/build/css/alertify.css';
+
 
 
 
@@ -13,7 +16,7 @@ export default function Cart(){
 	const {rootUrl} = useContext(UserContext);
 	const {getCartItems} = useContext(UserContext);
 	const token = localStorage.getItem('token');
-	const [showAlert, setshowAlert] = useState(false);
+
 
 
 
@@ -33,14 +36,19 @@ export default function Cart(){
 
 			if(result.removedFromCart === true){
 
-				setshowAlert(true);
+				alertify.set('notifier','position', 'top-center');
+				alertify.set('notifier','delay', 2)
+				alertify.success('Removed from cart');
 
-				setTimeout(function(){ 
+				setTimeout(()=>{
 
-					setshowAlert(false);
 					getCartItems();
 
-				}, 1500);
+
+				}, 1500)
+
+
+					
 
 
 			}else{
@@ -71,10 +79,9 @@ export default function Cart(){
 		return (
 
 			<Card key={cartItem._id._id} className="m-3 w-25">
-			<Alert variant="success" show={showAlert}>Removed from cart</Alert>
 			  <Card.Img variant="top" src={imgUrl}/>
 			  <Card.Body>
-			    <Card.Title>{cartItem._id.name}</Card.Title>
+			    <Card.Title><Link to={`/productView/${cartItem._id._id}`}> {cartItem._id.name} </Link></Card.Title>
 			    <Card.Text>
 			      Quantity: {cartItem.quantity} <br/><br/>
 			      Description:<br/>{cartItem._id.description}
@@ -88,7 +95,7 @@ export default function Cart(){
 			  </Card.Body>
 			  <Card.Footer>
 
-			  <Link to="/"> View</Link>
+			
 				  <Button className="btn btn-sm" onClick={()=>removeFromCart(cartItem._id._id)}> Remove from Cart</Button>
 				     
 			  </Card.Footer>

@@ -1,34 +1,93 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Hero from './../components/Hero';
-import {Form, Button, Container, Card, Row, Col} from 'react-bootstrap';
+import {Form, Button, Container, Card, Row, Col, CardDeck} from 'react-bootstrap';
+import UserContext from './../UserContext';
+import {Link} from 'react-router-dom'
 
 
 
 export default function Home(){
 
+	const {rootUrl} = useContext(UserContext);
+	const {addToCart} = useContext(UserContext);
+	const [featuredArr, setFeaturedArr] = useState([]);
+
+
+useEffect(()=>{
+
+
+	fetch(`${rootUrl}/api/products/featuredProducts`)
+	.then(result=> result.json())
+	.then(result=>{
+
+
+		let k = result.map(e=>{
+
+
+			let imgUrl="";
+
+			if(e.image !==""){
+
+				imgUrl=`${rootUrl}/static/images/${e.image}`
+
+			}
+
+
+		return (	 
+
+			<Card key={e._id} className="m-1">
+			  <Card.Img variant="top" src={imgUrl} className="w-100 h-50"/>
+			  <Card.Body>
+			    <Card.Title><Link to={`/productView/${e._id}`}>{e.name}</Link></Card.Title>
+			    <Card.Text>
+			      {e.description}
+			    </Card.Text>
+			    <Card.Text>
+			      ₱{e.price}
+			    </Card.Text>
+			  </Card.Body>
+			  <Card.Footer>
+
+				  <Button className="btn btn-sm" onClick={()=>addToCart(e._id)}> Add to Cart</Button>
+				     
+			  </Card.Footer>
+			</Card>
+
+	  )
+
+	})
+
+		setFeaturedArr(k);
+		
+	})
+
+
+},[])
+
+
+
+
+
 
 
 return(
-	<Container fluid>
-	<Row className="g-0">
-	<Col className="col-9 p-0">
+	<Container>
+
+
 	<Hero/>
-	</Col>
-	<Col className="col-3 p-0">
-	<Card >
-	  <Card.Img variant="top" src="./images/1_26-9LsrVdDNt-JnyqJscJw.jpeg" />
-	  <Card.Body>
-	    <Card.Title>Food Products</Card.Title>
-	    <Card.Text>
-	      Some quick example text to build on the card title and make up the bulk of
-	      the card's content.
-	    </Card.Text>
-	    <Button variant="primary">Go somewhere</Button>
-	  </Card.Body>
-	</Card>
-	</Col>
-	</Row>
-	<h1>Featured Products</h1>
+	
+	<h5 className="lead">Featured Products</h5>
+
+	<div>
+
+	<CardDeck >
+
+	{featuredArr}
+
+	</CardDeck>
+	</div>
+
+
 	</Container>
 	)
 }
