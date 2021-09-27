@@ -20,6 +20,8 @@ useEffect(()=>{
 	.then(result=> result.json())
 	.then(result=>{
 
+		let shortenedDesc;
+
 
 		let k = result.map(e=>{
 
@@ -32,15 +34,33 @@ useEffect(()=>{
 
 			}
 
+/*
+			if(e.description.length > 90){
+
+				shortenedDesc = e.description.slice(0,90) + {<Link to={/productView/${e._id}}...</Link>};
+
+				
+
+			}else{
+
+
+				shortenedDesc = e.description;
+			}
+*/
+			
+
+
+			
+
 
 		return (	 
 
-			<Card key={e._id} className="m-1">
-			  <Card.Img variant="top" src={imgUrl} className="w-100 h-50"/>
+			<Card key={e._id} className="mb-5 mr-2 featuredCard">
+			  <Card.Img  src={imgUrl}/>
 			  <Card.Body>
 			    <Card.Title><Link to={`/productView/${e._id}`}>{e.name}</Link></Card.Title>
 			    <Card.Text>
-			      {e.description}
+			      {e.description.length > 90 ?<>{e.description.slice(0,90)}...<Link to={`/productView/${e._id}`}> read more</Link></>: e.description}
 			    </Card.Text>
 			    <Card.Text>
 			      ₱{e.price}
@@ -76,16 +96,10 @@ return(
 
 	<Hero/>
 	
-	<h5 className="lead">Featured Products</h5>
+	<p className="lead">Featured Products</p>
 
-	<div>
-
-	<CardDeck >
-	
-
+	<div className="d-inline-flex flex-wrap justify-content-center">
 	{featuredArr}
-
-	</CardDeck>
 	</div>
 
 

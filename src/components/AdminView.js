@@ -35,13 +35,13 @@ export default function AdminView(productProp){
 	const [isFilePicked, setIsFilePicked] = useState(false);
 
 
-	const handleSubmission = (image) => {
+	const handleSubmission = (image, imageOld=null) => {
 		const formData = new FormData();
 
 		formData.append('File', selectedFile);
 
 		fetch(
-			`${rootUrl}/api/products/upload/${image}`,
+			`${rootUrl}/api/products/upload/${image}/${imageOld}`,
 			{
 				method: 'POST',
 				body: formData
@@ -79,6 +79,7 @@ export default function AdminView(productProp){
 	};
 
 	const handleOnClickFeature = ()=>{
+
 
 		setIsFeatured(!isFeatured);
 
@@ -137,7 +138,7 @@ export default function AdminView(productProp){
 	const openEdit = (pId)=>{
 
 		//get single course details to display in edit form
-		fetch(`${rootUrl}/api/products/${pId}`,{
+		fetch(`${rootUrl}/api/products/id/${pId}`,{
 
 			method: "GET",
 			headers:{
@@ -150,6 +151,8 @@ export default function AdminView(productProp){
 		.then(result=> result.json())
 		.then(result=>{
 
+			console.log(result);
+
 
 			//this rerun the fetch data so data refreshes asynchronously
 			//fetchData();
@@ -160,6 +163,7 @@ export default function AdminView(productProp){
 			setDescription(result.description);
 			setPrice(result.price);
 			setImage(result.image);
+			setIsFeatured(result.isFeatured);
 
 		})
 
@@ -171,39 +175,68 @@ export default function AdminView(productProp){
 	const editProduct = (e, pId)=>{
 
 		e.preventDefault();
+		let randomizer = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
-		fetch(`${rootUrl}/api/products/${pId}`,{
+		let newImageName;
 
-		method: "PUT",
-		headers: {
+		if(selectedFile.type){
 
-			"Content-Type": "application/json",
-			"Authorization": `Bearer ${token}`
-		},
-		body: JSON.stringify({
-			name: name,
-			description: description,
-			price: price
+			console.log('MAY SELECTED')
 
-		})
+			newImageName = (randomizer+'.'+selectedFile.type.slice(6))
+			
 
-		})
-		.then(result => result.json())
-		.then(result =>{
+		}else{
 
-			if(result.updateSuccess){
+			newImageName = image;
+		}
 
-				alertify.set('notifier','position', 'top-center');
-				alertify.set('notifier','delay', 3)
-				alertify.success('Update successful');
-
-				closeEdit();
-			}
-
-			fetchProductsAdmin();
 	
+			fetch(`${rootUrl}/api/products/${pId}`,{
 
-		})
+			method: "PUT",
+			headers: {
+
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				name: name,
+				description: description,
+				price: price,
+				image: newImageName,
+				isFeatured: isFeatured
+
+
+			})
+
+			})
+			.then(result => result.json())
+			.then(result =>{
+
+
+				/*console.log(result);*/
+
+				if(Object.keys(result).length !== 0){
+
+					handleSubmission(newImageName, result.image);
+
+
+					alertify.set('notifier','position', 'top-center');
+					alertify.set('notifier','delay', 3)
+					alertify.success('Update successful');
+
+					closeEdit();
+				}
+
+				fetchProductsAdmin();
+			
+
+			})
+
+
+	
+	
 
 
 	}
@@ -213,7 +246,8 @@ export default function AdminView(productProp){
 		setShowEdit(false);
 		setName("");
 		setDescription("")
-		setPrice(0)
+		setPrice(0);
+		setSelectedFile('');
 	}
 
 	const archiveProduct =(pId)=>{
@@ -330,9 +364,7 @@ export default function AdminView(productProp){
 			}
 
 			return (
-
-			
-
+	
 			<Card key={product._id} className="m-3 w-25">
 			
 			  <Card.Img variant="top" src={imgUrl}/>
@@ -445,7 +477,6 @@ export default function AdminView(productProp){
 		</Modal>
 
 
-
 		<Modal show={showEdit} onHide={closeEdit}>
 
 		<Form onSubmit={(e)=>editProduct(e, productId)}>
@@ -456,8 +487,8 @@ export default function AdminView(productProp){
 			</Modal.Header>
 			<Modal.Body>
 			
-			<img src="C:\Users\layug\Pictures\2019\2019-06-25\IMG_0380.jpg" className="w-25" alt=""/>
-			{/*<img src={`http://localhost:4000/static/images/${image}`} className="w-25" alt=""/>*/}
+		
+			<img src={`${rootUrl}/static/images/${image}`} className="w-50" alt=""/>
 			   <Form.Group>
 			   <Form.Label>Change Image</Form.Label><br/>
 				<input type="file" name="file" onChange={(e)=>setSelectedFile(e.target.files[0])} />	
@@ -489,6 +520,9 @@ export default function AdminView(productProp){
 					onChange={(e)=> setPrice(e.target.value)}
 					/>
 				</Form.Group>
+
+				<input type="checkbox"  id="feature" checked={isFeatured} onChange={()=>handleOnClickFeature()} value={isFeatured}/>
+				<label for="feature"> Feature on home page</label>
 
 			</Modal.Body>
 

@@ -7,8 +7,8 @@
 body{
 
 	background-color: #ffffff;
-	background-image: url("https://www.transparenttextures.com/patterns/transparent-square-tiles.png");
-	/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+	background-image: url("https://www.transparenttextures.com/patterns/crissxcross.png");
+/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 
 }
 
@@ -82,4 +82,23 @@ body{
 	max-height: 400px;
 
 }
+
+.featuredCard{
+
+	width: 350px;
+
+}
+.featuredCard img{
+
+	width: 100%;
+	height: 40%;
+
+}
+
+.featuredCard .card-body{
+
+	height: 100px;
+
+}
+
 

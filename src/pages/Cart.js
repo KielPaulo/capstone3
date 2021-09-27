@@ -16,7 +16,7 @@ export default function Cart(){
 	const {rootUrl} = useContext(UserContext);
 	const {getCartItems} = useContext(UserContext);
 	const token = localStorage.getItem('token');
-	const [qtyValue, setQtyValue] = useState(1);
+	const [fakeqtyValue, setfakeQtyValue] = useState(1);
 
 
 
@@ -40,6 +40,8 @@ export default function Cart(){
 				alertify.set('notifier','delay', 2)
 				alertify.success('Removed from cart');
 
+
+
 				setTimeout(()=>{
 
 					getCartItems();
@@ -47,8 +49,6 @@ export default function Cart(){
 
 				}, 1500)
 
-
-					
 
 
 			}else{
@@ -83,8 +83,16 @@ export default function Cart(){
 			  <Card.Body>
 			    <Card.Title><Link to={`/productView/${cartItem._id._id}`}> {cartItem._id.name} </Link></Card.Title>
 			    <Card.Text>
-			      Quantity: {cartItem.quantity} <br/><br/>
-			      Description:<br/>{cartItem._id.description}
+			
+			      <span className="quantityCtrl">
+			      Quantity<br/> 
+			      <button  onClick={()=>changeQty(cartItem._id._id,"dec", cartItem.quantity)}>-</button>
+			      <input type="text" value={cartItem.quantity}/>
+			      <button onClick={()=>changeQty(cartItem._id._id, "inc", cartItem.quantity)}>+</button>
+			      </span>
+			      <br/><br/>
+
+			      Description:<br/>{cartItem._id.description.length > 90 ?<>{cartItem._id.description.slice(0,90)}...<Link to={`/productView/${cartItem._id._id}`}> read more</Link></>: cartItem._id.description}
 			    </Card.Text>
 			    <Card.Text>
 			      Price: ₱{cartItem._id.price.toLocaleString('en-US')}
@@ -96,19 +104,12 @@ export default function Cart(){
 			  <Card.Footer>
 
 
-				  <span className="quantityCtrl">
-				  <span>Change Qty:</span>
-				  <button  onClick={()=>changeQty(cartItem._id._id,"dec")}>-</button>
-				  <input type="text" value={cartItem.quantity}/>
-				  <button onClick={()=>changeQty(cartItem._id._id, "inc")}>+</button>
-				  </span>
-				  <br/> <br/>
+				
+				  
 
 				  <Button className="btn btn-sm" onClick={()=>removeFromCart(cartItem._id._id)}> Remove from Cart</Button>
 				  
-
-
-				     
+	     
 			  </Card.Footer>
 			</Card>
 
@@ -116,40 +117,56 @@ export default function Cart(){
 	})
 
 
-	function changeQty(pId, operation){
+	function changeQty(pId, operation, qtyZeroCheck){
 
-		fetch(`${rootUrl}/api/users/changeQtyCart`,{
+		
+		if(qtyZeroCheck === 1 && operation ==="dec"){
 
-			method: "PUT",
-			headers:{
+			getCartItems();
+			return;
+	
+		}else{
 
-				"Content-Type" :" application/json",
-				"Authorization": `Bearer ${token}`
-			},
-			body:JSON.stringify({
 
-				pId: pId,
-				operation: operation
+			fetch(`${rootUrl}/api/users/changeQtyCart`,{
+
+				method: "PUT",
+				headers:{
+
+					"Content-Type" :" application/json",
+					"Authorization": `Bearer ${token}`
+				},
+				body:JSON.stringify({
+
+					pId: pId,
+					operation: operation
+				})
+
+
+			})
+			.then(result=> result.json())
+			.then(result=>{
+
+				if(result.modifiedCount === 1){
+
+					getCartItems();
+
+				}else{
+
+					alert('Something went wrong');
+					console.log(result);
+				}
+
+
+
 			})
 
 
-		})
-		.then(result=> result.json())
-		.then(result=>{
-
-			if(result.modifiedCount === 1){
-
-				getCartItems();
-
-			}else{
-
-				alert('Something went wrong');
-				console.log(result);
-			}
 
 
 
-		})
+
+		}
 
 
 		
@@ -198,7 +215,7 @@ export default function Cart(){
 
 				Swal.fire(
 				  'Orders placed successfully',
-				  'Check your orders at "My Orders"',
+				  'Check your orders at Account "My Orders"',
 				  'success'
 				)
 

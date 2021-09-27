@@ -26,13 +26,13 @@ export default function Product({productProp}){
 
 	return (
 
-	<Card key={_id} className="m-3 w-25 d-inline-flex h-25">
+	<Card key={_id} className="mb-5 mr-2 featuredCard">
 	
 	  <Card.Img variant="top" src={imgUrl}/>
 	  <Card.Body>
 	    <Card.Title> <Link to={`/productView/${_id}`}>{name}</Link></Card.Title>
 	    <Card.Text>
-	      {description}
+	      {description.length > 90 ?<>{description.slice(0,90)}...<Link to={`/productView/${_id}`}> read more</Link></>: description}
 	    </Card.Text>
 	    <Card.Text>
 	      ₱{price.toLocaleString('en-US')}

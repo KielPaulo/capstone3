@@ -61,7 +61,7 @@ export default function Products(){
 	
 		
 
-		<div className="text-center">
+		<div className="d-inline-flex flex-wrap justify-content-center">
 
 		{(isAdmin === "true")? <AdminView productData={products} fetchProductsAdmin={fetchProductsAdmin}/>: <UserView productData={products}/>}
 
