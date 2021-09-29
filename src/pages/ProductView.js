@@ -1,6 +1,6 @@
 import React,{useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Container, Card, Button, Alert} from 'react-bootstrap';
+import {Container, Card, Button, Alert, Badge} from 'react-bootstrap';
 import UserContext from './../UserContext';
 
 
@@ -38,17 +38,22 @@ export default function ProductView(){
 	}
 
 
+
+
+
 	return (
 
 		<Card key={productData._id} className="m-3 w-50">
+
 		  <Card.Img variant="top" src={imgUrl}/>
+		  {(productData.isActive === false) ?<><Badge variant="secondary">THIS PRODUCT IS UNAVAILABLE</Badge>{' '}</>: null}
 		  <Card.Body>
-		    <Card.Title>{productData.name}</Card.Title>
+		    <Card.Title className="text-danger">{productData.name}</Card.Title>
 		    <Card.Text>
 		      {productData.description}
 		    </Card.Text>
 		    <Card.Text>
-		      ₱{productData.price}
+		      <strong>₱{productData.price}</strong>
 		    </Card.Text>
 		  </Card.Body>
 		  <Card.Footer>
@@ -58,7 +63,13 @@ export default function ProductView(){
 		  	<input type="text" value={qtyValue}/>
 		  	<button onClick={()=>{setQtyValue(qtyValue+1)}}>+</button>
 		  	</div>
-			  <Button className="btn btn-sm" onClick={()=>addToCart(productData._id, qtyValue)}> Add to Cart</Button>
+		  	{(productData.isActive === true) ? 
+		  	<Button className="btn btn-sm btn-danger" onClick={()=>addToCart(productData._id, qtyValue)} > Add to Cart</Button>
+		  	:
+		  	<Button className="btn btn-sm btn-danger" onClick={()=>addToCart(productData._id, qtyValue)}disabled > Add to Cart</Button>
+		  }
+			  
+		  	
 			 
 		    
 		  </Card.Footer>

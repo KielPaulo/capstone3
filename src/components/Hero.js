@@ -1,19 +1,19 @@
-import {Carousel, Container, Row, Col, Card, Button} from 'react-bootstrap';
+import {Carousel, Row, Col, Card, Button} from 'react-bootstrap';
 
 export default function Hero(){
 
 	return(
-		<Row className="g-0 mb-5 hero">
-		<Col className="col-12 col-md-9 p-0">
-		<Carousel className="heroCarousel mr-1" variant="dark">
+		<Row className="g-0 mb-5 hero w-100">
+		<Col className="col-12 p-0">
+		<Carousel className="heroCarousel" variant="dark">
 		  <Carousel.Item>
 		    <img
-		      className="d-block w-100 "
+		      className="d-block w-100"
 		      src="./images/2.jpg"
 		      alt="First slide"
 		    />
 		    <Carousel.Caption>
-		      <h3>Missing Japanese products?</h3>
+		      <h3>Welcome to Kaimono!</h3>
 		      <p>Japanese made products made available to the Philippines!</p>
 		    </Carousel.Caption>
 		  </Carousel.Item>
@@ -44,19 +44,18 @@ export default function Hero(){
 		</Carousel>
 		</Col>
 
-		<Col className="col-12 col-md-3 p-0 rightCard">
+{/*		<Col className="col-md-3 p-0 rightCard">
 		<Card className="h-100">
-		  <Card.Img variant="top" src="./images/1_26-9LsrVdDNt-JnyqJscJw.jpeg" />
+		  <Card.Img className="img-fluid" src="./images/1_26-9LsrVdDNt-JnyqJscJw.jpeg" />
 		  <Card.Body>
 		    <Card.Title>Food Products</Card.Title>
 		    <Card.Text>
-		      Some quick example text to build on the card title and make up the bulk of
-		      the card's content.
+		     Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
 		    </Card.Text>
-		    <Button variant="primary">Go somewhere</Button>
+	
 		  </Card.Body>
 		</Card>
-		</Col>
+		</Col>*/}
 		</Row>
 
 		)

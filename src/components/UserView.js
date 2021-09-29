@@ -24,11 +24,6 @@ export default function UserView({productData}){
 	},[productData])
 
 
-	console.log(products);
-
-
-
-
 	return (
 
 		<>

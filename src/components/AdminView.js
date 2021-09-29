@@ -1,8 +1,8 @@
 import React,{useContext, useState, useEffect} from 'react';
-import {Card, Button, Alert, Modal, Form} from 'react-bootstrap';
+import {Card, Button, Modal, Form, Badge} from 'react-bootstrap';
 import {Link} from 'react-router-dom'
 import UserContext from './../UserContext'
-import Swal from 'sweetalert2'
+/*import Swal from 'sweetalert2'*/
 import alertify from 'alertifyjs';
 import 'alertifyjs/build/css/alertify.css';
 
@@ -14,6 +14,7 @@ export default function AdminView(productProp){
 	/*const{_id, name, description, price} = productProp;*/
 	const token = localStorage.getItem('token');
 	const {rootUrl} = useContext(UserContext);
+	const {userInfo} = useContext(UserContext);
 
 	const [showEdit, setShowEdit] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
@@ -32,7 +33,7 @@ export default function AdminView(productProp){
 
 
 	const [selectedFile, setSelectedFile] = useState('');
-	const [isFilePicked, setIsFilePicked] = useState(false);
+	/*const [isFilePicked, setIsFilePicked] = useState(false);*/
 
 
 	const handleSubmission = (image, imageOld=null) => {
@@ -117,11 +118,10 @@ export default function AdminView(productProp){
 
 			if(result){
 
-				Swal.fire(
-				  'Product successfully added!',
-				  '',
-				  'success'
-				)
+			alertify.set('notifier','position', 'top-center');
+			alertify.set('notifier','delay', 3)
+			alertify.success('Add product successful');
+
 				handleSubmission(result.image);
 				fetchProductsAdmin();
 				closeAdd();
@@ -315,38 +315,49 @@ export default function AdminView(productProp){
 
 	const deleteProduct = (pId)=>{
 
-		let r = window.confirm("Are you sure you want to delete?");
 
-		if (r == true) {
+		if(userInfo.isSuperAdmin !== true){
 
-			fetch(`${rootUrl}/api/products/${pId}/delete`,{
+			alertify.set('notifier','position', 'top-center');
+			alertify.set('notifier','delay', 4)
+			alertify.error('Delete is for Super Admins only. Click "Archive" instead to disable item.');
 
+			return;
 
-				method: "DELETE",
-				headers:{
+		}else{
 
-					"Authorization": `Bearer ${token}`
-				}
-			})
+			let r = window.confirm("Are you sure you want to delete?");
 
-			.then(result=> result.json())
-			.then(result=>{
+			if (r === true) {
 
-				if(result.deleted === true){
-
-				alertify.set('notifier','position', 'top-center');
-				alertify.set('notifier','delay', 2)
-				alertify.success('Product deleted');
-
-					fetchProductsAdmin();
-
-				}
+				fetch(`${rootUrl}/api/products/${pId}/delete`,{
 
 
-				
-			})
-		  
-		} 
+					method: "DELETE",
+					headers:{
+
+						"Authorization": `Bearer ${token}`
+					}
+				})
+
+				.then(result=> result.json())
+				.then(result=>{
+
+					if(result.deleted === true){
+
+					alertify.set('notifier','position', 'top-center');
+					alertify.set('notifier','delay', 2)
+					alertify.success('Product deleted');
+
+						fetchProductsAdmin();
+
+					}
+
+				})
+			  
+			} 
+
+		}
 
 	}
 
@@ -365,16 +376,22 @@ export default function AdminView(productProp){
 
 			return (
 	
-			<Card key={product._id} className="m-3 w-25">
+			<Card key={product._id} className="mb-5 mr-2 featuredCard">
 			
-			  <Card.Img variant="top" src={imgUrl}/>
+			  <Card.Img  src={imgUrl}/>
+
+			  <span className="ml-2">
+
+			  {(product.isActive === false) ?<><Badge variant="secondary">ARCHIVED</Badge>{' '}</>: <><Badge variant="success">ACTIVE</Badge>{' '}</>}
+			  {(product.isActive === true && product.isFeatured === true) ?<><Badge variant="info">Featured on Home page</Badge>{' '}</>: null}
+			  </span>
 			  <Card.Body>
-			    <Card.Title>{product.name}</Card.Title>
+			    <Card.Title><Link className ="text-danger" to={`/productView/${product._id}`}>{product.name}</Link></Card.Title>
 			    <Card.Text>
-			      {product.description}
+			      {product.description.length > 250 ?<>{product.description.slice(0,250)}...<Link className ="text-danger" to={`/productView/${product._id}`}> read more</Link></>: product.description}
 			    </Card.Text>
 			    <Card.Text>
-			      Php {product.price}
+			    <strong> ₱{product.price.toLocaleString('en-US')}</strong>
 			    </Card.Text>
 			  </Card.Body>
 			  <Card.Footer>
@@ -412,7 +429,8 @@ export default function AdminView(productProp){
 	return (
 
 		<>
-		<Button className="btn btn-md btn-info m-3" onClick={openAdd}>Add Product</Button>
+		<h4 className="col-12 text-left text-danger p-1">Admin Product Dashboard</h4>
+		<div className="col-12 text-right"><Button className="btn btn-md btn-info m-3" onClick={openAdd}>Add New Product</Button></div>
 		{products}
 
 		<Modal show={showAdd} onHide={closeAdd}>
@@ -492,7 +510,7 @@ export default function AdminView(productProp){
 			   <Form.Group>
 			   <Form.Label>Change Image</Form.Label><br/>
 				<input type="file" name="file" onChange={(e)=>setSelectedFile(e.target.files[0])} />	
-				{/*<button onClick={handleSubmission}>Submit</button>*/}
+			
 				</Form.Group>
 				<Form.Group controlId ="productName">
 					<Form.Label>Name</Form.Label>

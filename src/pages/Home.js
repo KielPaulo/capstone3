@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import Hero from './../components/Hero';
-import {Form, Button, Container, Card, Row, Col, CardDeck, Spinner} from 'react-bootstrap';
+import {Button, Container, Card, Spinner} from 'react-bootstrap';
 import UserContext from './../UserContext';
 import {Link} from 'react-router-dom'
 
@@ -19,8 +19,8 @@ useEffect(()=>{
 	fetch(`${rootUrl}/api/products/featuredProducts`)
 	.then(result=> result.json())
 	.then(result=>{
-
-		let shortenedDesc;
+/*
+		let shortenedDesc;*/
 
 
 		let k = result.map(e=>{
@@ -34,41 +34,23 @@ useEffect(()=>{
 
 			}
 
-/*
-			if(e.description.length > 90){
-
-				shortenedDesc = e.description.slice(0,90) + {<Link to={/productView/${e._id}}...</Link>};
-
-				
-
-			}else{
-
-
-				shortenedDesc = e.description;
-			}
-*/
-			
-
-
-			
-
 
 		return (	 
 
 			<Card key={e._id} className="mb-5 mr-2 featuredCard">
 			  <Card.Img  src={imgUrl}/>
 			  <Card.Body>
-			    <Card.Title><Link to={`/productView/${e._id}`}>{e.name}</Link></Card.Title>
-			    <Card.Text>
-			      {e.description.length > 90 ?<>{e.description.slice(0,90)}...<Link to={`/productView/${e._id}`}> read more</Link></>: e.description}
+			    <Card.Title><Link className="text-danger" to={`/productView/${e._id}`}>{e.name}</Link></Card.Title>
+			    <Card.Text className="lead">
+			      {e.description.length > 250 ?<>{e.description.slice(0,250)}...<Link className="text-danger" to={`/productView/${e._id}`}> read full</Link></>: e.description}
 			    </Card.Text>
 			    <Card.Text>
-			      ₱{e.price}
+			      <strong>₱{e.price}</strong>
 			    </Card.Text>
 			  </Card.Body>
 			  <Card.Footer>
 
-				  <Button className="btn btn-sm" onClick={()=>addToCart(e._id)}> Add to Cart</Button>
+				  <Button className="btn btn-sm btn-danger" onClick={()=>addToCart(e._id)}> Add to Cart</Button>
 				     
 			  </Card.Footer>
 			</Card>
@@ -95,10 +77,9 @@ return(
 
 
 	<Hero/>
-	
-	<p className="lead">Featured Products</p>
+	<h4 className="text-danger"><em>Featured Products</em></h4>
 
-	<div className="d-inline-flex flex-wrap justify-content-center">
+	<div className="d-inline-flex flex-wrap justify-content-evenly">
 	{featuredArr}
 	</div>
 

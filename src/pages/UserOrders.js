@@ -1,20 +1,28 @@
 import React,{useState, useEffect, useContext} from 'react';
 import {Container,Table} from 'react-bootstrap';
 import UserContext from './../UserContext';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 
 
-export default function MyOrders(){
+export default function UserOrders(){
 
 
 	const {rootUrl} = useContext(UserContext);
+	const {userInfo} = useContext(UserContext);
 	const token = localStorage.getItem('token');
-	const [myOrderArr, setMyOrderArr] = useState([]) 
+	const [userOrderArr, setUserOrderArr] = useState([]);
+	let history = useHistory();
+
+	if(userInfo.userId == null || userInfo.isAdmin == false){
+
+		history.push('/');
+
+	}
 
 	useEffect(()=>{
 
 
-		fetch(`${rootUrl}/api/users/myOrders`,{
+		fetch(`${rootUrl}/api/users/orders`,{
 
 
 			headers:{
@@ -30,10 +38,11 @@ export default function MyOrders(){
 
 			let k = result.map(e=>{
 
-
 				let d= new Date(e.createdOn);
 
 				let i = e.items.map(i=>{
+
+					console.log(i);
 
 
 					return (
@@ -54,6 +63,7 @@ export default function MyOrders(){
 				return (
 				<tr>
 				<td>{e._id}</td>
+				<td>{e.buyerId.firstName} {e.buyerId.lastName}</td>
 				<td>{d.toLocaleString('en-US')}</td>
 				<td>{i}</td>
 				<td>₱{e.totalAmount.toLocaleString('en-US')}</td>
@@ -64,23 +74,37 @@ export default function MyOrders(){
 
 			})
 
-			setMyOrderArr(k);
+			setUserOrderArr(k);
 
 		
+		})
+		.catch(error=>{
+
+			console.log(error);
 		})
 
 
 	},[])
 
 
+
+
+
+
+
+
+
+
+
 	return(
 
 		<Container className="mt-5">
-		<h2 className="text-danger">My Orders</h2>
+		<h2 className="text-danger">User Orders</h2>
 		<Table className="bg-white table-hover">
 			<thead className="thead-dark">
 			<tr>
 				<th>Order ID</th>
+				<th>Buyer Info</th>
 				<th>Created on</th>
 				<th>Items/Quantity</th>
 				<th>Total Amount</th>
@@ -88,7 +112,7 @@ export default function MyOrders(){
 				</thead>
 				<tbody>
 
-				{myOrderArr}
+				{userOrderArr}
 
 				
 

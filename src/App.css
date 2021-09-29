@@ -6,15 +6,23 @@
 
 body{
 
+	
 	background-color: #ffffff;
-	background-image: url("https://www.transparenttextures.com/patterns/crissxcross.png");
-/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 
+
+	/*background-image: url("https://www.transparenttextures.com/patterns/inspiration-geometry.png");*/
+	background: url("http://localhost:4000/static/images/333.jpg") 	no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+	
 }
 
 .main{
 
-	min-height: 100vh;
+	min-height: 75vh;
 }
 
 .quantityCtrl{
@@ -74,12 +82,14 @@ body{
 
 .hero{
 
-	max-height: 400px;
+
+
+
 }
 
 .rightCard{
-
-	max-height: 400px;
+/*
+	max-height: 400px;*/
 
 }
 
@@ -97,7 +107,32 @@ body{
 
 .featuredCard .card-body{
 
-	height: 100px;
+	min-height: 320px !important;
+
+}
+.loginContainer{
+
+
+	
+	width: 320px !important;
+	padding: 40px !important;
+	border: solid 1px skyblue !important;
+	border-radius: 5px;
+}
+
+.registerContainer{
+
+	padding: 40px !important;
+	border: solid 1px skyblue !important;
+	border-radius: 5px;
+	width: 400px !important;
+
+}
+
+.myNav{
+
+	box-shadow: 0 0.7rem 1rem rgb(0 0 0 / 15%);
+	/*background-color: hotpink !important;*/
 
 }
 

@@ -108,7 +108,7 @@ export default function Login(){
 
 		(userInfo.userId !== null) ? <Redirect to="/"/> :
 
-			<Container className="mb-5">
+			<Container className="mb-5 loginContainer bg-light">
 			
 			<h1 className="text-center">Login</h1>
 

@@ -17,6 +17,8 @@ import Products from './pages/Products';
 import Cart from './pages/Cart';
 import ProductView from './pages/ProductView';
 import MyOrders from './pages/MyOrders';
+import UserOrders from './pages/UserOrders';
+import UserList from './pages/UserList';
 
 
 import Header from './components/Header';
@@ -30,6 +32,7 @@ function App() {
   const [cartItemArr, setCartItemArr] = useState([]);
   const [cartItemCount, setCartItemCount] = useState(0);
   let token = localStorage.getItem('token');
+  let isAdmin = localStorage.getItem('isAdmin');
   const [showAlert, setShowAlert] = useState(false);
   
 
@@ -52,7 +55,8 @@ function App() {
         userId: null,
         isAdmin: null,
         firstName: null,
-        lastName: null
+        lastName: null,
+        isSuperAdmin: null,
 
     })
 
@@ -62,38 +66,52 @@ function App() {
 
 const getCartItems = ()=>{
 
+  if(userInfo.isAdmin === true || isAdmin ==="true" || token === undefined){
 
-  fetch(`${rootUrl}/api/users/getCartItems`,{
 
-    method: "GET",
-    headers:{
+    return;
 
-      "Authorization": `Bearer ${token}`
-    }
-  })
-  .then(result=>result.json())
-  .then(result=>{
-  
-    let itemCount=0
 
-    result.forEach(e=>{
+  }else{
 
-      itemCount += e.quantity;
 
+    fetch(`${rootUrl}/api/users/getCartItems`,{
+
+      method: "GET",
+      headers:{
+
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(result=>result.json())
+    .then(result=>{
+    
+      let itemCount=0
+
+      result.forEach(e=>{
+
+        itemCount += e.quantity;
+
+      })
+
+      setCartItemCount(itemCount);
+      setCartItemArr(result);
+      
+    }).catch(err=>{
+
+      
     })
 
-    setCartItemCount(itemCount);
-    setCartItemArr(result);
-    
-  }).catch(err=>{
 
-    
-  })
+  }
+
 
 }
 
 
+
 const addToCart = (pId, qtyValue)=>{
+
 
   if(token == undefined || token == null){
 
@@ -105,6 +123,20 @@ const addToCart = (pId, qtyValue)=>{
     return;
 
   }
+
+
+  if(isAdmin === "true"){
+
+
+    alertify.set('notifier','position', 'top-center');
+    alertify.set('notifier','delay', 2)
+    alertify.error('Not an Admin function');
+
+    return;
+
+  }
+
+
 
   if(qtyValue == undefined){
 
@@ -147,6 +179,7 @@ const addToCart = (pId, qtyValue)=>{
 
     }
   })
+  .catch(err => console.log(err))
 }
 
  
@@ -171,6 +204,7 @@ const addToCart = (pId, qtyValue)=>{
 
          userId: result._id,
          isAdmin: result.isAdmin,
+         isSuperAdmin: result.isSuperAdmin,
          firstName: result.firstName,
          lastName: result.lastName
 
@@ -182,7 +216,7 @@ const addToCart = (pId, qtyValue)=>{
     })
 
 
-  },[])//this useeffect asynchronously update cart count idk why, if only without the additional [] in the end
+  },[])
 
 
 
@@ -203,6 +237,8 @@ const addToCart = (pId, qtyValue)=>{
           <Route exact path ="/cart" component ={Cart}/>
           <Route exact path ="/productView/:productId" component ={ProductView}/>
           <Route exact path ="/myOrders" component ={MyOrders}/>
+          <Route exact path ="/userOrders" component ={UserOrders}/>
+          <Route exact path ="/userList" component ={UserList}/>
  
         </Container>
 

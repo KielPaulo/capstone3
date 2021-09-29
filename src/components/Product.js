@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Card, Button, Alert} from 'react-bootstrap';
+import {Card, Button, Row} from 'react-bootstrap';
 import {Link} from 'react-router-dom'
 import UserContext from './../UserContext'
 
@@ -9,10 +9,10 @@ export default function Product({productProp}){
 
 
 	const{_id, name, description, price, image} = productProp;
-	const token = localStorage.getItem('token');
+	/*const token = localStorage.getItem('token');*/
 	const {rootUrl} = useContext(UserContext);
 	const {addToCart} = useContext(UserContext);
-	const {getCartItems} = useContext(UserContext);
+/*	const {getCartItems} = useContext(UserContext);*/
 
 	const [qtyValue, setQtyValue] = useState(1);
 
@@ -26,16 +26,18 @@ export default function Product({productProp}){
 
 	return (
 
+	
+
 	<Card key={_id} className="mb-5 mr-2 featuredCard">
 	
 	  <Card.Img variant="top" src={imgUrl}/>
 	  <Card.Body>
-	    <Card.Title> <Link to={`/productView/${_id}`}>{name}</Link></Card.Title>
+	    <Card.Title> <Link className ="text-danger" to={`/productView/${_id}`}>{name}</Link></Card.Title>
 	    <Card.Text>
-	      {description.length > 90 ?<>{description.slice(0,90)}...<Link to={`/productView/${_id}`}> read more</Link></>: description}
+	      {description.length > 250 ?<>{description.slice(0,250)}...<Link className ="text-danger" to={`/productView/${_id}`}> read more</Link></>: description}
 	    </Card.Text>
 	    <Card.Text>
-	      ₱{price.toLocaleString('en-US')}
+	      <strong>₱{price.toLocaleString('en-US')}</strong>
 	    </Card.Text>
 	  </Card.Body>
 	  <Card.Footer>
@@ -45,12 +47,10 @@ export default function Product({productProp}){
 	  		<button onClick={()=>{setQtyValue(qtyValue+1)}}>+</button>
 	  		</div>
 
-		  <Button className="btn btn-sm" onClick={()=>addToCart(_id, qtyValue)}> Add to Cart</Button>
-
-		 
+		  <Button className="btn btn-sm btn-danger" onClick={()=>addToCart(_id, qtyValue)}> Add to Cart</Button>
+	 
 	    
 	  </Card.Footer>
-
 
 
 	</Card>

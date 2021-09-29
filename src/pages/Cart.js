@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import UserContext from './../UserContext';
-import {Card, Button,Container, Alert} from 'react-bootstrap';
+import {Card, Button,Container} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import Swal from 'sweetalert2'
 import alertify from 'alertifyjs';
@@ -11,13 +11,12 @@ import 'alertifyjs/build/css/alertify.css';
 
 export default function Cart(){
 
-	const {cartItemArr, setCartItemArr} = useContext(UserContext);
+	const {cartItemArr} = useContext(UserContext);
 	const {removeCartToggle, setRemoveCartToggle} = useContext(UserContext);
 	const {rootUrl} = useContext(UserContext);
 	const {getCartItems} = useContext(UserContext);
 	const token = localStorage.getItem('token');
-	const [fakeqtyValue, setfakeQtyValue] = useState(1);
-
+/*	const [fakeqtyValue, setfakeQtyValue] = useState(1);*/
 
 
 		const removeFromCart = (pId)=>{
@@ -41,13 +40,12 @@ export default function Cart(){
 				alertify.success('Removed from cart');
 
 
-
 				setTimeout(()=>{
 
 					getCartItems();
 
 
-				}, 1500)
+				}, 1100)
 
 
 
@@ -78,10 +76,10 @@ export default function Cart(){
 
 		return (
 
-			<Card key={cartItem._id._id} className="m-3 w-25">
+			<Card key={cartItem._id._id} className="m-3 w-50">
 			  <Card.Img variant="top" src={imgUrl}/>
 			  <Card.Body>
-			    <Card.Title><Link to={`/productView/${cartItem._id._id}`}> {cartItem._id.name} </Link></Card.Title>
+			    <Card.Title><Link className="text-danger" to={`/productView/${cartItem._id._id}`}> {cartItem._id.name} </Link></Card.Title>
 			    <Card.Text>
 			
 			      <span className="quantityCtrl">
@@ -92,7 +90,7 @@ export default function Cart(){
 			      </span>
 			      <br/><br/>
 
-			      Description:<br/>{cartItem._id.description.length > 90 ?<>{cartItem._id.description.slice(0,90)}...<Link to={`/productView/${cartItem._id._id}`}> read more</Link></>: cartItem._id.description}
+			      Description:<br/>{cartItem._id.description.length > 250 ?<>{cartItem._id.description.slice(0,250)}...<Link className="text-danger" to={`/productView/${cartItem._id._id}`}> read more</Link></>: cartItem._id.description}
 			    </Card.Text>
 			    <Card.Text>
 			      Price: ₱{cartItem._id.price.toLocaleString('en-US')}
@@ -107,7 +105,7 @@ export default function Cart(){
 				
 				  
 
-				  <Button className="btn btn-sm" onClick={()=>removeFromCart(cartItem._id._id)}> Remove from Cart</Button>
+				  <Button className="btn btn-sm btn-secondary" onClick={()=>removeFromCart(cartItem._id._id)}> Remove from Cart</Button>
 				  
 	     
 			  </Card.Footer>
@@ -157,19 +155,10 @@ export default function Cart(){
 					console.log(result);
 				}
 
-
-
 			})
 
 
-
-
-
-
 		}
-
-
-		
 
 	}
 
@@ -257,10 +246,11 @@ export default function Cart(){
 
 
 		<Container>
-		<h2>My Cart</h2>
+		<h2 className="text-danger">My Cart</h2>
+
 		{(k.length === 0) ? <h6>No items in cart</h6> : k}
-		<div>Total Amount: ₱{cartTotalAmount.toLocaleString('en-US')}</div>
-		{ (cartItemArr.length === 0) ? null: <Button className="btn btn-warning" onClick={checkout}>Checkout</Button>}
+		<div className="lead pl-3">Total Amount: <strong>₱{cartTotalAmount.toLocaleString('en-US')}</strong></div>
+		{ (cartItemArr.length === 0) ? null: <Button className="btn-lg btn-danger ml-3" onClick={checkout}>Checkout</Button>}
 		
 		</Container>
 

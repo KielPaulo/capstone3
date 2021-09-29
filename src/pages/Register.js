@@ -102,7 +102,7 @@ export default function Register(){
 
 		:
 
-		<Container className="mb-5">
+		<Container className="mb-5 registerContainer bg-light">
 			
 			<h1 className="text-center">Register</h1>
 		{/*	//right now is call back function register, chuii e*/}
