@@ -45,7 +45,7 @@ useEffect(()=>{
 			      {e.description.length > 250 ?<>{e.description.slice(0,250)}...<Link className="text-danger" to={`/productView/${e._id}`}> read full</Link></>: e.description}
 			    </Card.Text>
 			    <Card.Text>
-			      <strong>₱{e.price}</strong>
+			      <strong>₱{e.price.toLocaleString('en-US')}</strong>
 			    </Card.Text>
 			  </Card.Body>
 			  <Card.Footer>
