@@ -11,7 +11,7 @@ body{
 
 
 	/*background-image: url("https://www.transparenttextures.com/patterns/inspiration-geometry.png");*/
-	background: url("http://localhost:4000/static/images/333.jpg") 	no-repeat center center fixed; 
+	background: url("https://immense-shore-64525.herokuapp.com/static/images/333.jpg") 	no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
