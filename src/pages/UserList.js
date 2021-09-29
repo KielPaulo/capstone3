@@ -59,7 +59,7 @@ export default function UserList(){
 							<td>{e.email}</td>
 							<td>{(e.isAdmin) ? 'Yes': 'No'}</td>
 							<td>{(e.isSuperAdmin) ? 'Yes': 'No'}</td>
-							<td><Button onClick={()=>setAdmin(e._id, e.isAdmin)}className={(e.isAdmin) ?'btn-danger btn btn-sm': 'btn-info btn btn-sm'}>{(e.isAdmin==true) ? 'Remove Admin': 'Make Admin'}</Button></td>
+							<td><Button onClick={()=>setAdmin(e._id, e.isAdmin, e.isSuperAdmin)}className={(e.isAdmin) ?'btn-danger btn btn-sm': 'btn-info btn btn-sm'}>{(e.isAdmin==true) ? 'Remove Admin': 'Make Admin'}</Button></td>
 							</tr>
 							</>
 
@@ -80,7 +80,7 @@ export default function UserList(){
 
 
 
-	const setAdmin =(id, isAdmin)=>{
+	const setAdmin =(id, isAdmin, isSuperAdmin)=>{
 
 		let r;
 
@@ -92,6 +92,18 @@ export default function UserList(){
 
 				return;
 			}
+		}
+
+		if(isSuperAdmin === true){
+
+			alertify.set('notifier','position', 'top-center');
+			alertify.set('notifier','delay', 2)
+			alertify.error('RESTRICTED');
+
+
+			return;
+
+
 		}
 
 

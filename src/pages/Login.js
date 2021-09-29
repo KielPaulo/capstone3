@@ -52,7 +52,7 @@ export default function Login(){
 		.then(result=>{
 
 			
-			if(result === false){
+			if(result === false || result.password === false){
 
 				alert('Email or password is incorrect')
 				return;
