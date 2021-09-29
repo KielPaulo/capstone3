@@ -28,7 +28,7 @@ import Footer from './components/Footer';
 function App() {
 
 
-  const [rootUrl] = useState('http://localhost:4000');
+  const [rootUrl] = useState('https://immense-shore-64525.herokuapp.com');
   const [cartItemArr, setCartItemArr] = useState([]);
   const [cartItemCount, setCartItemCount] = useState(0);
   let token = localStorage.getItem('token');
