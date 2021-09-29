@@ -75,7 +75,7 @@ useEffect(()=>{
 return(
 	<Container>
 
-	<marquee behavior="" direction="">Try Admin Login=> Email:tester@admin.com , Password: 1234 Please do not spam :( Thanks!</marquee>
+	<marquee behavior="" direction="">Try Admin Login=> Email:tester@admin.com , Password: 1234 </marquee>
 
 	<Hero/>
 	<h4 className="text-danger"><em>Featured Products</em></h4>
