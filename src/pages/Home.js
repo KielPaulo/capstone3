@@ -20,7 +20,7 @@ useEffect(()=>{
 	.then(result=> result.json())
 	.then(result=>{
 /*
-		let shortenedDesc;*/
+		let sshortenedDesc;*/
 
 
 		let k = result.map(e=>{
