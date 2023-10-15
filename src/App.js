@@ -1,3 +1,4 @@
+
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container} from 'react-bootstrap';
@@ -6,10 +7,6 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import UserContext from './UserContext';
 import alertify from 'alertifyjs';
 import 'alertifyjs/build/css/alertify.css';
-
-
-
-
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -19,16 +16,14 @@ import ProductView from './pages/ProductView';
 import MyOrders from './pages/MyOrders';
 import UserOrders from './pages/UserOrders';
 import UserList from './pages/UserList';
-
-
 import Header from './components/Header';
 import Footer from './components/Footer';
-
+import getApiUrl from './config';
 
 function App() {
 
 
-  const [rootUrl] = useState('https://ecommerce-api-g7er.onrender.com');
+  const [rootUrl] = useState(getApiUrl());
   const [cartItemArr, setCartItemArr] = useState([]);
   const [cartItemCount, setCartItemCount] = useState(0);
   let token = localStorage.getItem('token');
